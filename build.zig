@@ -4,7 +4,7 @@ pub fn build(b: *std.Build) void {
     const optimize = b.standardOptimizeOption(.{});
     const target = b.standardTargetOptions(.{});
 
-    b.addModule(.{ .name = "fmtbuf", .source_file = .{ .path = "fmtbuf.zig" } });
+    const module = b.addModule("fmtbuf", .{ .source_file = .{ .path = "fmtbuf.zig" } });
 
     const test_step = b.step("test", "Run all tests in all modes.");
     const tests = b.addTest(.{
@@ -20,7 +20,7 @@ pub fn build(b: *std.Build) void {
         .target = target,
         .optimize = optimize,
     });
-    example.addAnonymousModule("fmtbuf", .{ .source_file = .{ .path = "fmtbuf.zig" } });
+    example.addModule("fmtbuf", module);
     example_step.dependOn(&example.step);
 
     const readme_step = b.step("readme", "Remake README.");
