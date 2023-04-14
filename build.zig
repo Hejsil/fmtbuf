@@ -12,7 +12,8 @@ pub fn build(b: *std.Build) void {
         .target = target,
         .optimize = optimize,
     });
-    test_step.dependOn(&tests.run().step);
+    const run_tests = b.addRunArtifact(tests);
+    test_step.dependOn(&run_tests.step);
 
     const example_step = b.step("examples", "Build examples");
     const example = b.addTest(.{
@@ -20,8 +21,9 @@ pub fn build(b: *std.Build) void {
         .target = target,
         .optimize = optimize,
     });
+    const install_example = b.addInstallArtifact(example);
     example.addModule("fmtbuf", module);
-    example_step.dependOn(&example.step);
+    example_step.dependOn(&install_example.step);
 
     const readme_step = b.step("readme", "Remake README.");
     const readme = readMeStep(b);
